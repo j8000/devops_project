@@ -13,6 +13,7 @@ services:
       - back_net
     depends_on:
       - db
+      - migration_runner
 
   nginx:
     image: nginx:latest
@@ -39,6 +40,19 @@ services:
     networks:
       - back_net
 
+  migration_runner:
+    build:
+      context: .
+      target: final
+    command: python -c "from app.src.db import init_db; init_db()"
+    restart: "no"
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/flaskdb
+    networks:
+      - back_net
+    depends_on:
+      - db
+
   seed_runner:
     build:
       context: .
@@ -54,6 +68,7 @@ services:
       - back_net
     depends_on:
       - db
+      - migration_runner # Ensure migrations run before seeding
 
 networks:
   front_net:
