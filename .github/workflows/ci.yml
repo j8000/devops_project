@@ -58,7 +58,6 @@ jobs:
         tags: ghcr.io/${{ github.repository }}/app:latest,ghcr.io/${{ github.repository }}/app:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-
   codeql:
     name: CodeQL
     runs-on: ubuntu-latest
@@ -88,3 +87,4 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
+
