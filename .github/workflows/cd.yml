@@ -1,0 +1,31 @@
+name: CD
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Pull Docker Images
+      run: |
+        docker pull ghcr.io/${{ github.repository }}/app:latest
+
+    - name: Restart Application
+      run: |
+        # Placeholder for deployment command
+        echo "Restarting application..."
